@@ -10,6 +10,7 @@ import { Artist } from './entities/artist.entity';
 import * as uuid from 'uuid';
 import { Errors } from '../app/constants';
 import { AlbumsService } from '../albums/albums.service';
+import { TracksService } from '../tracks/tracks.service';
 
 @Injectable()
 export class ArtistsService {
@@ -18,6 +19,8 @@ export class ArtistsService {
   constructor(
     @Inject(forwardRef(() => AlbumsService))
     private readonly albumsService: AlbumsService,
+    @Inject(forwardRef(() => TracksService))
+    private readonly tracksService: TracksService,
   ) {}
 
   create(input: CreateArtistDto) {
@@ -50,12 +53,8 @@ export class ArtistsService {
   remove(id: string) {
     const index = this.artists.findIndex((item) => item.id === id);
     if (index != -1) {
-      const albums = this.albumsService.findAll();
-      albums.forEach((album) => {
-        if (album.artistId === id) {
-          album.artistId = null;
-        }
-      });
+      this.albumsService.removeArtist(id);
+      this.tracksService.removeArtist(id);
       const artist = this.artists.splice(index, 1)[0];
       return artist;
     }

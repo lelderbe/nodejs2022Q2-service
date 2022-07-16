@@ -10,6 +10,7 @@ import { Album } from './entities/album.entity';
 import * as uuid from 'uuid';
 import { ArtistsService } from '../artists/artists.service';
 import { Errors } from '../app/constants';
+import { TracksService } from '../tracks/tracks.service';
 
 @Injectable()
 export class AlbumsService {
@@ -19,6 +20,8 @@ export class AlbumsService {
   constructor(
     @Inject(forwardRef(() => ArtistsService))
     private readonly artistsService: ArtistsService,
+    @Inject(forwardRef(() => TracksService))
+    private readonly tracksService: TracksService,
   ) {}
 
   create(input: CreateAlbumDto) {
@@ -59,10 +62,20 @@ export class AlbumsService {
   remove(id: string) {
     const index = this.albums.findIndex((item) => item.id === id);
     if (index != -1) {
+      this.tracksService.removeAlbum(id);
       const album = this.albums.splice(index, 1)[0];
       return album;
     }
 
     throw new NotFoundException(Errors.ALBUM_NOT_FOUND);
+  }
+
+  removeArtist(id: string) {
+    const albums = this.findAll();
+    albums.forEach((album) => {
+      if (album.artistId === id) {
+        album.artistId = null;
+      }
+    });
   }
 }
