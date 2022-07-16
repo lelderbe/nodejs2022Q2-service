@@ -13,33 +13,33 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUUIDv4 } from '../utils/validate';
 
-@Controller('user')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('user')
   create(@Body() input: CreateUserDto) {
     return this.usersService.create(input);
   }
 
-  @Get()
+  @Get('user')
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
+  @Get('user/:id')
   findOne(@Param('id') id: string) {
     validateUUIDv4(id);
     return this.usersService.findOne(id);
   }
 
-  @Put(':id')
+  @Put('user/:id')
   update(@Param('id') id: string, @Body() input: UpdateUserDto) {
     validateUUIDv4(id);
     return this.usersService.update(id, input);
   }
 
-  @Delete(':id')
+  @Delete('user/:id')
   @HttpCode(204)
   remove(@Param('id') id: string) {
     validateUUIDv4(id);

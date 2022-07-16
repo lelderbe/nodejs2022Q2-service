@@ -5,6 +5,8 @@ export enum Errors {
   ARTIST_NOT_FOUND = 'Artist not found',
   ALBUM_NOT_FOUND = 'Album not found',
   TRACK_NOT_FOUND = 'Track not found',
+  LOGIN_ALREADY_EXISTS = 'Login already exists',
+  INCORRECT_CREDENTIALS = 'Incorrect login or password',
 }
 
 export const UUID_VERSION = 4;
