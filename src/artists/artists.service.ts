@@ -1,13 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artist.entity';
 import * as uuid from 'uuid';
 import { Errors } from '../app/constants';
+import { AlbumsService } from '../albums/albums.service';
 
 @Injectable()
 export class ArtistsService {
   private readonly artists = [];
+
+  constructor(
+    @Inject(forwardRef(() => AlbumsService))
+    private readonly albumsService: AlbumsService,
+  ) {}
 
   create(input: CreateArtistDto) {
     const artist = Object.assign(new Artist(), {
@@ -39,6 +50,12 @@ export class ArtistsService {
   remove(id: string) {
     const index = this.artists.findIndex((item) => item.id === id);
     if (index != -1) {
+      const albums = this.albumsService.findAll();
+      albums.forEach((album) => {
+        if (album.artistId === id) {
+          album.artistId = null;
+        }
+      });
       const artist = this.artists.splice(index, 1)[0];
       return artist;
     }
