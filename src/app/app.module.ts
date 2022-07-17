@@ -8,6 +8,7 @@ import { TracksModule } from '../tracks/tracks.module';
 import { AuthModule } from '../auth/auth.module';
 import { AuthMiddleware } from '../auth/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
+import { FavoritesModule } from '../favorites/favorites.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
     ArtistsModule,
     AlbumsModule,
     TracksModule,
+    FavoritesModule,
     AuthModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
