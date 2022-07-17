@@ -4,11 +4,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import * as uuid from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
-import * as uuid from 'uuid';
-import { ArtistsService } from '../artists/artists.service';
 import { Errors } from '../app/constants';
 import { TracksService } from '../tracks/tracks.service';
 
@@ -16,34 +15,29 @@ import { TracksService } from '../tracks/tracks.service';
 export class AlbumsService {
   private readonly albums = [];
 
-  // constructor(private readonly artistsService: ArtistsService) {}
   constructor(
-    @Inject(forwardRef(() => ArtistsService))
-    private readonly artistsService: ArtistsService,
     @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
   ) {}
 
-  create(input: CreateAlbumDto) {
-    // if (input.artistId) {
-    //   this.artistsService.findOne(input.artistId);
-    // }
-
+  async create(input: CreateAlbumDto): Promise<Album> {
     const album = Object.assign(new Album(), {
       id: uuid.v4(),
       ...input,
     });
+
     this.albums.push(album);
 
     return album;
   }
 
-  findAll() {
+  async findAll(): Promise<Album[]> {
     return this.albums;
   }
 
-  findOne(id: string) {
+  async findOne(id: string): Promise<Album> {
     const album = this.albums.find((item) => item.id === id);
+
     if (!album) {
       throw new NotFoundException(Errors.ALBUM_NOT_FOUND);
     }
@@ -51,28 +45,24 @@ export class AlbumsService {
     return album;
   }
 
-  async update(id: string, input: UpdateAlbumDto) {
-    // if (input.artistId) {
-    //   this.artistsService.findOne(input.artistId);
-    // }
-
+  async update(id: string, input: UpdateAlbumDto): Promise<Album> {
     return Object.assign(await this.findOne(id), input);
   }
 
-  remove(id: string) {
+  async remove(id: string): Promise<Album> {
     const index = this.albums.findIndex((item) => item.id === id);
-    if (index != -1) {
-      this.tracksService.removeAlbum(id);
-      const album = this.albums.splice(index, 1)[0];
-      return album;
+
+    if (index !== -1) {
+      await this.tracksService.removeAlbum(id);
+
+      return this.albums.splice(index, 1)[0];
     }
 
     throw new NotFoundException(Errors.ALBUM_NOT_FOUND);
   }
 
-  removeArtist(id: string) {
-    const albums = this.findAll();
-    albums.forEach((album) => {
+  async removeArtist(id: string) {
+    this.albums.forEach((album) => {
       if (album.artistId === id) {
         album.artistId = null;
       }

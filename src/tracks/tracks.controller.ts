@@ -17,6 +17,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import { validateUUIDv4 } from '../utils/validate';
 import { FavoritesService } from '../favorites/favorites.service';
 import { CurrentUser } from '../users/decorators/user.decorator';
+import { Track } from './entities/track.entity';
 
 @Controller('track')
 export class TracksController {
@@ -27,34 +28,37 @@ export class TracksController {
   ) {}
 
   @Post()
-  create(@Body() input: CreateTrackDto) {
+  async create(@Body() input: CreateTrackDto): Promise<Track> {
     return this.tracksService.create(input);
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Track[]> {
     return this.tracksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Track> {
     validateUUIDv4(id);
     return this.tracksService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() input: UpdateTrackDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() input: UpdateTrackDto,
+  ): Promise<Track> {
     validateUUIDv4(id);
     return this.tracksService.update(id, input);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
+  async remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
     try {
-      this.favoritesService.removeTrack(id, userId);
+      await this.favoritesService.removeTrack(id, userId);
     } catch {}
-    this.tracksService.remove(id);
+    await this.tracksService.remove(id);
   }
 }

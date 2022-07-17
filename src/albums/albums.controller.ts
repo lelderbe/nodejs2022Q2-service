@@ -17,6 +17,7 @@ import { validateUUIDv4 } from '../utils/validate';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { Album } from './entities/album.entity';
 
 @Controller('album')
 export class AlbumsController {
@@ -27,34 +28,37 @@ export class AlbumsController {
   ) {}
 
   @Post()
-  create(@Body() input: CreateAlbumDto) {
+  async create(@Body() input: CreateAlbumDto): Promise<Album> {
     return this.albumsService.create(input);
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Album[]> {
     return this.albumsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Album> {
     validateUUIDv4(id);
     return this.albumsService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() input: UpdateAlbumDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() input: UpdateAlbumDto,
+  ): Promise<Album> {
     validateUUIDv4(id);
     return this.albumsService.update(id, input);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
+  async remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
     try {
-      this.favoritesService.removeAlbum(id, userId);
+      await this.favoritesService.removeAlbum(id, userId);
     } catch {}
-    this.albumsService.remove(id);
+    await this.albumsService.remove(id);
   }
 }

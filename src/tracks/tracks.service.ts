@@ -1,13 +1,7 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { ArtistsService } from '../artists/artists.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import * as uuid from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import * as uuid from 'uuid';
 import { Track } from './entities/track.entity';
 import { Errors } from '../app/constants';
 
@@ -15,27 +9,24 @@ import { Errors } from '../app/constants';
 export class TracksService {
   private readonly tracks = [];
 
-  constructor(
-    @Inject(forwardRef(() => ArtistsService))
-    private readonly artistsService: ArtistsService,
-  ) {}
-
-  create(input: CreateTrackDto) {
+  async create(input: CreateTrackDto): Promise<Track> {
     const track = Object.assign(new Track(), {
       id: uuid.v4(),
       ...input,
     });
+
     this.tracks.push(track);
 
     return track;
   }
 
-  findAll() {
+  async findAll(): Promise<Track[]> {
     return this.tracks;
   }
 
-  findOne(id: string) {
+  async findOne(id: string): Promise<Track> {
     const track = this.tracks.find((item) => item.id === id);
+
     if (!track) {
       throw new NotFoundException(Errors.TRACK_NOT_FOUND);
     }
@@ -43,32 +34,30 @@ export class TracksService {
     return track;
   }
 
-  async update(id: string, input: UpdateTrackDto) {
+  async update(id: string, input: UpdateTrackDto): Promise<Track> {
     return Object.assign(await this.findOne(id), input);
   }
 
-  remove(id: string) {
+  async remove(id: string): Promise<Track> {
     const index = this.tracks.findIndex((item) => item.id === id);
+
     if (index != -1) {
-      const track = this.tracks.splice(index, 1)[0];
-      return track;
+      return this.tracks.splice(index, 1)[0];
     }
 
     throw new NotFoundException(Errors.TRACK_NOT_FOUND);
   }
 
-  removeArtist(id: string) {
-    const tracks = this.findAll();
-    tracks.forEach((track) => {
+  async removeArtist(id: string) {
+    this.tracks.forEach((track) => {
       if (track.artistId === id) {
         track.artistId = null;
       }
     });
   }
 
-  removeAlbum(id: string) {
-    const tracks = this.findAll();
-    tracks.forEach((track) => {
+  async removeAlbum(id: string) {
+    this.tracks.forEach((track) => {
       if (track.albumId === id) {
         track.albumId = null;
       }

@@ -15,24 +15,26 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  login(input: SignupUserDto) {
-    const users = this.usersService.findAll();
+  async login(input: SignupUserDto) {
+    const users = await this.usersService.findAll();
     const user = users.find((user) => user.login === input.login);
+
     if (!user || user.password !== input.password) {
       throw new ForbiddenException(Errors.INCORRECT_CREDENTIALS);
     }
 
     const payload = { sub: user.id };
+
     return {
       token: this.jwtService.sign(payload),
     };
   }
 
-  signup(input: SignupUserDto) {
-    if (this.usersService.findOneByLogin(input.login)) {
+  async signup(input: SignupUserDto) {
+    if (await this.usersService.findOneByLogin(input.login)) {
       throw new ConflictException(Errors.LOGIN_ALREADY_EXISTS);
     }
 
-    this.usersService.create(input);
+    await this.usersService.create(input);
   }
 }

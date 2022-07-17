@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsUUID,
   IsNumber,
+  IsPositive,
 } from 'class-validator';
 import { UUID_VERSION } from '../../app/constants';
 
@@ -14,12 +15,13 @@ export class CreateTrackDto {
 
   @IsOptional()
   @IsUUID(UUID_VERSION)
-  readonly artistId?: string;
+  readonly artistId?: string | null = null;
 
   @IsOptional()
   @IsUUID(UUID_VERSION)
-  readonly albumId?: string;
+  readonly albumId?: string | null = null;
 
   @IsNumber()
+  @IsPositive()
   readonly duration: number;
 }

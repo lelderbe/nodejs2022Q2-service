@@ -17,9 +17,6 @@ export class FavoritesService {
   private readonly tracks = [];
 
   constructor(
-    // private readonly albumsService: AlbumsService,
-    // private readonly artistsService: ArtistsService,
-    // private readonly tracksService: TracksService,
     @Inject(forwardRef(() => AlbumsService))
     private readonly albumsService: AlbumsService,
     @Inject(forwardRef(() => ArtistsService))
@@ -28,7 +25,7 @@ export class FavoritesService {
     private readonly tracksService: TracksService,
   ) {}
 
-  findAll(userId: string) {
+  async findAll(userId: string) {
     return {
       artists: this.artists
         .filter((item) => item.userId === userId)
@@ -42,9 +39,9 @@ export class FavoritesService {
     };
   }
 
-  addArtist(id: string, userId: string) {
+  async addArtist(id: string, userId: string) {
     try {
-      this.artistsService.findOne(id);
+      await this.artistsService.findOne(id);
     } catch {
       throw new UnprocessableEntityException(Errors.ARTIST_NOT_EXISTS);
     }
@@ -59,7 +56,7 @@ export class FavoritesService {
     // TODO: else - error?
   }
 
-  removeArtist(id: string, userId: string) {
+  async removeArtist(id: string, userId: string) {
     const index = this.artists.findIndex(
       (item) => item.userId === userId && item.id === id,
     );
@@ -71,9 +68,9 @@ export class FavoritesService {
     this.artists.splice(index, 1);
   }
 
-  addAlbum(id: string, userId: string) {
+  async addAlbum(id: string, userId: string) {
     try {
-      this.albumsService.findOne(id);
+      await this.albumsService.findOne(id);
     } catch {
       throw new UnprocessableEntityException(Errors.ALBUM_NOT_EXISTS);
     }
@@ -88,7 +85,7 @@ export class FavoritesService {
     // TODO: else - error?
   }
 
-  removeAlbum(id: string, userId: string) {
+  async removeAlbum(id: string, userId: string) {
     const index = this.albums.findIndex(
       (item) => item.userId === userId && item.id === id,
     );
@@ -100,9 +97,9 @@ export class FavoritesService {
     this.albums.splice(index, 1);
   }
 
-  addTrack(id: string, userId: string) {
+  async addTrack(id: string, userId: string) {
     try {
-      this.tracksService.findOne(id);
+      await this.tracksService.findOne(id);
     } catch {
       throw new UnprocessableEntityException(Errors.TRACK_NOT_EXISTS);
     }
@@ -117,7 +114,7 @@ export class FavoritesService {
     // TODO: else - error?
   }
 
-  removeTrack(id: string, userId: string) {
+  async removeTrack(id: string, userId: string) {
     const index = this.tracks.findIndex(
       (item) => item.userId === userId && item.id === id,
     );
@@ -129,12 +126,16 @@ export class FavoritesService {
     this.tracks.splice(index, 1);
   }
 
-  buildFavoritesResponse(favorites) {
-    const artists = favorites.artists.map((id) =>
-      this.artistsService.findOne(id),
+  async buildFavoritesResponse(favorites) {
+    const artists = await Promise.all(
+      favorites.artists.map((id) => this.artistsService.findOne(id)),
     );
-    const albums = favorites.albums.map((id) => this.albumsService.findOne(id));
-    const tracks = favorites.tracks.map((id) => this.tracksService.findOne(id));
+    const albums = await Promise.all(
+      favorites.albums.map((id) => this.albumsService.findOne(id)),
+    );
+    const tracks = await Promise.all(
+      favorites.tracks.map((id) => this.tracksService.findOne(id)),
+    );
     return {
       artists,
       albums,

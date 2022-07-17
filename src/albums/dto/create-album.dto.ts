@@ -1,7 +1,8 @@
 import {
+  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   IsUUID,
 } from 'class-validator';
@@ -12,11 +13,11 @@ export class CreateAlbumDto {
   @IsString()
   name: string;
 
-  @IsOptional()
-  @IsNumber()
-  year?: number;
+  @IsInt()
+  @IsPositive()
+  year: number;
 
   @IsOptional()
   @IsUUID(UUID_VERSION)
-  artistId?: string | null;
+  artistId?: string | null = null;
 }
