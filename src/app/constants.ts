@@ -7,6 +7,7 @@ export enum Errors {
   TRACK_NOT_FOUND = 'Track not found',
   LOGIN_ALREADY_EXISTS = 'Login already exists',
   INCORRECT_CREDENTIALS = 'Incorrect login or password',
+  NOT_AUTHORIZED = 'Access token is missing or invalid',
 }
 
 export const UUID_VERSION = 4;

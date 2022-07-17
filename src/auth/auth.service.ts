@@ -4,8 +4,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Errors } from 'src/app/constants';
-import { UsersService } from 'src/users/users.service';
+import { Errors } from '../app/constants';
+import { UsersService } from '../users/users.service';
 import { SignupUserDto } from './dto/signup-user.dto';
 
 @Injectable()
