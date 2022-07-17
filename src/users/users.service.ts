@@ -79,8 +79,8 @@ export class UsersService {
   }
 
   async buildUserResponse(user: User): Promise<UserResponse> {
-    const { password, ...rest } = user;
-    return rest;
+    delete user.password;
+    return user;
   }
 
   async buildUsersResponse(users: User[]): Promise<UserResponse[]> {
