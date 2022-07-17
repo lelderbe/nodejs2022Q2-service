@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Param, Delete, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { Errors } from '../app/constants';
 import { CurrentUser } from '../users/decorators/user.decorator';
 import { validateUUIDv4 } from '../utils/validate';
 import { FavoritesService } from './favorites.service';
@@ -18,13 +27,13 @@ export class FavoritesController {
     validateUUIDv4(id);
     this.favoritesService.addArtist(id, userId);
     return {
-      statusCode: 201,
-      message: 'Artist added to favorites',
+      statusCode: HttpStatus.CREATED,
+      message: Errors.ARTIST_ADDED_TO_FAVORITES,
     };
   }
 
   @Delete('artist/:id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeArtist(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
     return this.favoritesService.removeArtist(id, userId);
@@ -35,13 +44,13 @@ export class FavoritesController {
     validateUUIDv4(id);
     this.favoritesService.addAlbum(id, userId);
     return {
-      statusCode: 201,
-      message: 'Album added to favorites',
+      statusCode: HttpStatus.CREATED,
+      message: Errors.ALBUM_ADDED_TO_FAVORITES,
     };
   }
 
   @Delete('album/:id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeAlbum(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
     return this.favoritesService.removeAlbum(id, userId);
@@ -52,13 +61,13 @@ export class FavoritesController {
     validateUUIDv4(id);
     this.favoritesService.addTrack(id, userId);
     return {
-      statusCode: 201,
-      message: 'Track added to favorites',
+      statusCode: HttpStatus.CREATED,
+      message: Errors.TRACK_ADDED_TO_FAVORITES,
     };
   }
 
   @Delete('track/:id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeTrack(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
     return this.favoritesService.removeTrack(id, userId);

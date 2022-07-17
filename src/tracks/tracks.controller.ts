@@ -7,15 +7,24 @@ import {
   Delete,
   Put,
   HttpCode,
+  forwardRef,
+  Inject,
+  HttpStatus,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { validateUUIDv4 } from '../utils/validate';
+import { FavoritesService } from '../favorites/favorites.service';
+import { CurrentUser } from '../users/decorators/user.decorator';
 
 @Controller('track')
 export class TracksController {
-  constructor(private readonly tracksService: TracksService) {}
+  constructor(
+    private readonly tracksService: TracksService,
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   @Post()
   create(@Body() input: CreateTrackDto) {
@@ -40,9 +49,12 @@ export class TracksController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
-  remove(@Param('id') id: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
-    return this.tracksService.remove(id);
+    try {
+      this.favoritesService.removeTrack(id, userId);
+    } catch {}
+    this.tracksService.remove(id);
   }
 }

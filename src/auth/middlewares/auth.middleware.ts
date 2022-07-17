@@ -12,7 +12,6 @@ export class AuthMiddleware implements NestMiddleware {
   ) {}
 
   async use(req: ExpressRequest, res: Response, next: NextFunction) {
-    console.log('use middleware');
     req.user = null;
     if (!req.headers.authorization) {
       next();
@@ -21,7 +20,6 @@ export class AuthMiddleware implements NestMiddleware {
 
     // const token = req.headers.authorization.split(' ')[1];
     const token = req.headers.authorization;
-    console.log('token:', token);
     try {
       const payload = this.jwtService.verify(token);
       console.log('payload:', payload);

@@ -7,7 +7,12 @@ import {
   Delete,
   HttpCode,
   Put,
+  forwardRef,
+  Inject,
+  HttpStatus,
 } from '@nestjs/common';
+import { FavoritesService } from '../favorites/favorites.service';
+import { CurrentUser } from '../users/decorators/user.decorator';
 import { validateUUIDv4 } from '../utils/validate';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -15,7 +20,11 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumsController {
-  constructor(private readonly albumsService: AlbumsService) {}
+  constructor(
+    private readonly albumsService: AlbumsService,
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   @Post()
   create(@Body() input: CreateAlbumDto) {
@@ -40,9 +49,12 @@ export class AlbumsController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
-  remove(@Param('id') id: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
     validateUUIDv4(id);
-    return this.albumsService.remove(id);
+    try {
+      this.favoritesService.removeAlbum(id, userId);
+    } catch {}
+    this.albumsService.remove(id);
   }
 }

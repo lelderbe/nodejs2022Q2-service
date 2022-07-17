@@ -7,42 +7,48 @@ import {
   Delete,
   Put,
   HttpCode,
+  UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUUIDv4 } from '../utils/validate';
 
-@Controller()
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('user')
+  @Post()
   create(@Body() input: CreateUserDto) {
-    return this.usersService.create(input);
+    const user = this.usersService.create(input);
+    return this.usersService.buildUserResponse(user);
   }
 
-  @Get('user')
+  @Get()
   findAll() {
-    return this.usersService.findAll();
+    const users = this.usersService.findAll();
+    return this.usersService.buildUsersResponse(users);
   }
 
-  @Get('user/:id')
+  @Get(':id')
   findOne(@Param('id') id: string) {
     validateUUIDv4(id);
-    return this.usersService.findOne(id);
+    const user = this.usersService.findOne(id);
+    return this.usersService.buildUserResponse(user);
   }
 
-  @Put('user/:id')
-  update(@Param('id') id: string, @Body() input: UpdateUserDto) {
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() input: UpdateUserDto) {
     validateUUIDv4(id);
-    return this.usersService.update(id, input);
+    const user = await this.usersService.update(id, input);
+    return this.usersService.buildUserResponse(user);
   }
 
-  @Delete('user/:id')
-  @HttpCode(204)
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     validateUUIDv4(id);
-    return this.usersService.remove(id);
+    this.usersService.remove(id);
   }
 }

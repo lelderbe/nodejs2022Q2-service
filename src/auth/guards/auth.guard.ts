@@ -10,7 +10,6 @@ import { ExpressRequest } from '../../app/types/express-request.interface';
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    console.log('AuthGuard canActivate()');
     const request = context.switchToHttp().getRequest<ExpressRequest>();
 
     if (request.user) {

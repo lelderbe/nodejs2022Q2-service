@@ -8,9 +8,12 @@ export enum Errors {
   LOGIN_ALREADY_EXISTS = 'Login already exists',
   INCORRECT_CREDENTIALS = 'Incorrect login or password',
   NOT_AUTHORIZED = 'Access token is missing or invalid',
-  TRACK_NOT_EXISTS = "Track with such id doesn't exist",
   ARTIST_NOT_EXISTS = "Artist with such id doesn't exist",
   ALBUM_NOT_EXISTS = "Album with such id doesn't exist",
+  TRACK_NOT_EXISTS = "Track with such id doesn't exist",
+  ARTIST_ADDED_TO_FAVORITES = 'Artist added to favorites',
+  ALBUM_ADDED_TO_FAVORITES = 'Album added to favorites',
+  TRACK_ADDED_TO_FAVORITES = 'Track added to favorites',
 }
 
 export const UUID_VERSION = 4;

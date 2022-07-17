@@ -1,12 +1,13 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import * as uuid from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import * as uuid from 'uuid';
 import { Errors } from '../app/constants';
 
 @Injectable()
@@ -14,6 +15,10 @@ export class UsersService {
   private readonly users = [];
 
   create(input: CreateUserDto) {
+    if (this.findOneByLogin(input.login)) {
+      throw new ConflictException(Errors.LOGIN_ALREADY_EXISTS);
+    }
+
     const ms = new Date().getTime();
     const user = Object.assign(new User(), {
       id: uuid.v4(),
@@ -22,7 +27,6 @@ export class UsersService {
       version: 1,
       ...input,
     });
-    // console.log('user:', user);
     this.users.push(user);
 
     return user;
@@ -39,6 +43,10 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  findOneByLogin(login: string) {
+    return this.users.find((item) => item.login === login);
   }
 
   async update(id: string, input: UpdateUserDto) {
@@ -61,5 +69,14 @@ export class UsersService {
     }
 
     throw new NotFoundException(Errors.USER_NOT_FOUND);
+  }
+
+  buildUserResponse(user: User) {
+    const { password, ...rest } = user;
+    return rest;
+  }
+
+  buildUsersResponse(users) {
+    return users.map((user) => this.buildUserResponse(user));
   }
 }

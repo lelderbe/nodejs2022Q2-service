@@ -29,8 +29,7 @@ export class AuthService {
   }
 
   signup(input: SignupUserDto) {
-    const users = this.usersService.findAll();
-    if (users.some((user) => user.login === input.login)) {
+    if (this.usersService.findOneByLogin(input.login)) {
       throw new ConflictException(Errors.LOGIN_ALREADY_EXISTS);
     }
 
