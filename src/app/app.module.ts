@@ -9,9 +9,12 @@ import { AuthModule } from '../auth/auth.module';
 import { AuthMiddleware } from '../auth/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { FavoritesModule } from '../favorites/favorites.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { config } from '../ormconfig';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot(config),
     UsersModule,
     ArtistsModule,
     AlbumsModule,
