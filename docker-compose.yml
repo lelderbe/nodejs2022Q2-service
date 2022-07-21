@@ -1,7 +1,7 @@
 version: '3.9' # optional since v1.27.0
 
 networks:
-  lelderbe:
+  lelderbe_network:
     name: lelderbe_network
 
 volumes:
