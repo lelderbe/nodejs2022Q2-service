@@ -27,7 +27,7 @@ export class ArtistsService {
   }
 
   async findOne(id: string): Promise<Artist> {
-    const artist = this.artistsRepository.findOneBy({ id });
+    const artist = await this.artistsRepository.findOneBy({ id });
 
     if (!artist) {
       throw new NotFoundException(Errors.ARTIST_NOT_FOUND);
@@ -43,6 +43,6 @@ export class ArtistsService {
 
   async remove(id: string): Promise<Artist> {
     const artist = await this.findOne(id);
-    return this.artistsRepository.softRemove(artist);
+    return this.artistsRepository.remove(artist);
   }
 }

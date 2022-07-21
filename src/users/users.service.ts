@@ -4,7 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import * as uuid from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -13,33 +14,26 @@ import { UserResponse } from './types/user-response.type';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [];
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+  ) {}
 
   async create(input: CreateUserDto): Promise<User> {
     if (await this.findOneByLogin(input.login)) {
       throw new ConflictException(Errors.LOGIN_ALREADY_EXISTS);
     }
 
-    const ms = new Date().getTime();
-    const user = Object.assign(new User(), {
-      id: uuid.v4(),
-      createdAt: ms,
-      updatedAt: ms,
-      version: 1,
-      ...input,
-    });
-
-    this.users.push(user);
-
-    return user;
+    const user = this.usersRepository.create(input);
+    return this.usersRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
-    return this.users;
+    return this.usersRepository.find();
   }
 
   async findOne(id: string): Promise<User> {
-    const user = this.users.find((item) => item.id === id);
+    const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException(Errors.USER_NOT_FOUND);
@@ -49,7 +43,7 @@ export class UsersService {
   }
 
   async findOneByLogin(login: string): Promise<User> {
-    return this.users.find((item) => item.login === login);
+    return this.usersRepository.findOneBy({ login });
   }
 
   async update(id: string, input: UpdateUserDto): Promise<User> {
@@ -61,21 +55,13 @@ export class UsersService {
 
     user.password = input.newPassword;
     user.version = user.version + 1;
-    user.updatedAt = new Date().getTime();
 
-    return user;
+    return this.usersRepository.save(user);
   }
 
   async remove(id: string): Promise<User> {
-    const index = this.users.findIndex((item) => item.id === id);
-
-    if (index != -1) {
-      const user = this.users.splice(index, 1)[0];
-
-      return user;
-    }
-
-    throw new NotFoundException(Errors.USER_NOT_FOUND);
+    const user = await this.findOne(id);
+    return this.usersRepository.remove(user);
   }
 
   async buildUserResponse(user: User): Promise<UserResponse> {
