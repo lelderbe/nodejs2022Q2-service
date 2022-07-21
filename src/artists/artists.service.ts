@@ -1,24 +1,17 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artist.entity';
 import { Errors } from '../app/constants';
 import { AlbumsService } from '../albums/albums.service';
 import { TracksService } from '../tracks/tracks.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistsService {
   constructor(
-    @Inject(forwardRef(() => AlbumsService))
     private readonly albumsService: AlbumsService,
-    @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
     @InjectRepository(Artist)
     private readonly artistsRepository: Repository<Artist>,
