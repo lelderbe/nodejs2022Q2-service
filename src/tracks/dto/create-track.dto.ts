@@ -18,12 +18,12 @@ export class CreateTrackDto {
   @ApiPropertyOptional({ format: 'uuid' })
   @IsOptional()
   @IsUUID(UUID_VERSION)
-  readonly artistId?: string | null = null;
+  readonly artistId?: string | null;
 
   @ApiPropertyOptional({ format: 'uuid' })
   @IsOptional()
   @IsUUID(UUID_VERSION)
-  readonly albumId?: string | null = null;
+  readonly albumId?: string | null;
 
   @ApiProperty({ description: 'In seconds', example: 262 })
   @IsNumber()
