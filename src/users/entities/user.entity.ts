@@ -5,6 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 
 @Entity('users')
@@ -22,14 +23,24 @@ export class User {
   password: string;
 
   @ApiProperty()
-  @Column({ default: 1 })
+  @VersionColumn()
   version: number;
 
   @ApiProperty({ example: 1655000000 })
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({
+    transformer: {
+      from: (value) => value.getTime(),
+      to: (value) => value,
+    },
+  })
+  createdAt: number;
 
   @ApiProperty()
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @UpdateDateColumn({
+    transformer: {
+      from: (value) => value.getTime(),
+      to: (value) => value,
+    },
+  })
+  updatedAt: number;
 }

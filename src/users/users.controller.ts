@@ -9,11 +9,6 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { validateUUIDv4 } from '../utils/validate';
-import { UserResponse } from './types/user-response.type';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -24,6 +19,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { validateUUIDv4 } from '../utils/validate';
+import { UserResponse } from './types/user-response.type';
 
 @ApiTags('Users')
 @Controller('user')

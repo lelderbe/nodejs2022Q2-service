@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -20,10 +19,6 @@ export class UsersService {
   ) {}
 
   async create(input: CreateUserDto): Promise<User> {
-    if (await this.findOneByLogin(input.login)) {
-      throw new ConflictException(Errors.LOGIN_ALREADY_EXISTS);
-    }
-
     const user = this.usersRepository.create(input);
     return this.usersRepository.save(user);
   }
@@ -54,7 +49,6 @@ export class UsersService {
     }
 
     user.password = input.newPassword;
-    user.version = user.version + 1;
 
     return this.usersRepository.save(user);
   }
