@@ -17,3 +17,5 @@ export enum Errors {
 }
 
 export const UUID_VERSION = 4;
+
+export const FAVORITE_TECH_ID = 'e335ad78-2372-4500-af32-b363ba5ae713';
