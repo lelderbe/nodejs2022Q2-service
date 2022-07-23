@@ -9,9 +9,13 @@ volumes:
 
 services:
   node:
-    build: ./requirements/node
+    build:
+      context: .
+      dockerfile: requirements/node/Dockerfile
+      target: development
     container_name: rss_node
     image: 'node:rss'
+    command: npm run start:dev
     networks:
       - rss
     depends_on:
@@ -23,6 +27,7 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app
+      - ./app/node_modules
 
   postgres:
     build: ./requirements/postgres
