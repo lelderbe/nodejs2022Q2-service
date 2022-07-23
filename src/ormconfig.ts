@@ -11,6 +11,5 @@ export const config: DataSourceOptions = {
   logging: process.env.NODE_ENV === 'production' ? false : true,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*.js'],
-  //   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   migrationsTransactionMode: 'each',
 };
