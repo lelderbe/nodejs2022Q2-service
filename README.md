@@ -1,6 +1,6 @@
 # Home Library Service
 
-![image](https://user-images.githubusercontent.com/29270751/180639532-a62ec8dd-cbee-423d-af10-3774fa3f99c5.png)
+![image](https://user-images.githubusercontent.com/29270751/180639495-990e52ea-1ae7-4801-9278-dd0625a228a2.png)
 
 ## ✅ Prerequisites
 
@@ -12,7 +12,7 @@
 ```
 git clone git@github.com:lelderbe/nodejs2022Q2-service.git
 cd nodejs2022Q2-service
-git checkout docker
+git checkout typeorm
 ```
 
 ## ⚙️ Configure application
