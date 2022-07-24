@@ -1,5 +1,7 @@
 # Home Library Service
 
+![image](https://user-images.githubusercontent.com/29270751/180639532-a62ec8dd-cbee-423d-af10-3774fa3f99c5.png)
+
 ## ✅ Prerequisites
 
 - Git - [Download & install Git](https://git-scm.com/downloads).
@@ -91,8 +93,8 @@ docker-compose exec node npm run format
 # show existing containers
 docker ps -a
 
-# show docker images
-docker images
+# show created images
+docker-compose images
 
 # show docker volumes
 docker volume ls
