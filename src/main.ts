@@ -19,7 +19,7 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  await app.listen(PORT);
+  await app.listen(PORT, () => console.log(`Server ready on port ${PORT}`));
 }
 
 bootstrap();
