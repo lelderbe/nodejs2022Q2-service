@@ -1,0 +1,795 @@
+{
+	"info": {
+		"_postman_id": "b8303ae2-c53f-44d0-b9c4-9526e58b1426",
+		"name": "REST Service NEST.js [RSS]",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "All users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response has \"id\" property'] = responseJSON.hasOwnProperty('id');",
+									"",
+									"if(tests['Response has \"id\" property']){",
+									"    pm.environment.set('userId', responseJSON.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"joe\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"123\",\n    \"newPassword\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/{{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Singup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var responseJSON = JSON.parse(responseBody);",
+									"",
+									"// tests['Response has \"id\" property'] = responseJSON.hasOwnProperty('id');",
+									"",
+									"// if(tests['Response has \"id\" property']){",
+									"//     pm.environment.set('userId', responseJSON.id);",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"joe\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response has \"token\" property'] = responseJSON.hasOwnProperty('token');",
+									"",
+									"if(tests['Response has \"token\" property']){",
+									"    pm.environment.set('token', responseJSON.token);",
+									"    pm.globals.set('token', responseJSON.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"joe\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Artists",
+			"item": [
+				{
+					"name": "All artists",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/artist/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"artist",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create artist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response has \"id\" property'] = responseJSON.hasOwnProperty('id');",
+									"",
+									"if(tests['Response has \"id\" property']){",
+									"    pm.environment.set('artistId', responseJSON.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Freddy Mercury\",\n    \"grammy\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/artist/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"artist",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get artist by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/artist/{{artistId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"artist",
+								"{{artistId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update artist",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"grammy\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/artist/{{artistId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"artist",
+								"{{artistId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete artist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/artist/{{artistId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"artist",
+								"{{artistId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "All albums",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/album/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"album",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create album",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response has \"id\" property'] = responseJSON.hasOwnProperty('id');",
+									"",
+									"if(tests['Response has \"id\" property']){",
+									"    pm.environment.set('albumId', responseJSON.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nevermind\",\n    \"year\": 1999,\n    \"artistId\": \"{{artistId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/album/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"album",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get album by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/album/{{albumId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"album",
+								"{{albumId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update album",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Never\",\n    \"artistId\": \"{{artistId}}\",\n    \"year\": 2000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/album/{{albumId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"album",
+								"{{albumId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete album",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/album/{{albumId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"album",
+								"{{albumId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tracks",
+			"item": [
+				{
+					"name": "All tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/track/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"track",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response has \"id\" property'] = responseJSON.hasOwnProperty('id');",
+									"",
+									"if(tests['Response has \"id\" property']){",
+									"    pm.environment.set('trackId', responseJSON.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Long song\",\n    \"artistId\": \"{{artistId}}\",\n    \"albumId\": \"{{albumId}}\",\n    \"duration\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/track/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"track",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get track by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/track/{{trackId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"track",
+								"{{trackId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update track",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"artistId\": \"66c3a2f3-a1f4-4cb0-a725-3cccced4c233\",\n    \"albumId\": \"b8a9efb3-fddf-4aee-85e3-bdca8151f429\",\n    \"duration\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/track/{{trackId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"track",
+								"{{trackId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete track",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/track/{{trackId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"track",
+								"{{trackId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Favorites",
+			"item": [
+				{
+					"name": "All favorites",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/favs",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add artist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/favs/artist/{{artistId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs",
+								"artist",
+								"{{artistId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete artist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/favs/artist/{{artistId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs",
+								"artist",
+								"{{artistId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add album",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/favs/album/{{albumId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs",
+								"album",
+								"{{albumId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete album",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/favs/album/{{albumId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs",
+								"album",
+								"{{albumId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add track",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/favs/track/{{trackId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs",
+								"track",
+								"{{trackId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete track",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/favs/track/{{trackId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"favs",
+								"track",
+								"{{trackId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
